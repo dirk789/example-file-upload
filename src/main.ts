@@ -8,10 +8,10 @@ if (form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     console.log({ e });
-    const file = e.target?.[0]?.files[0];
+    const file = (e.target as any)?.[0]?.files[0];
 
     if (file) {
-      handleFileUpload(file);
+      handleFileUpload();
     }
   });
 }
@@ -48,7 +48,7 @@ input &&
     };
   });
 
-function handleFileUpload(blob: Blob) {
+function handleFileUpload() {
   if (!canvas) {
     throw new Error("No file upload");
   }
@@ -56,10 +56,10 @@ function handleFileUpload(blob: Blob) {
     if (!blob) {
       return;
     }
-    let file = new File([blob], "fileName.jpg", { type: "image/jpeg" });
+    let file = new File([blob], "fileName.jpg", { type: "image/avif" });
     console.log({ file });
     downloadFile(file, "Test");
-  }, "image/jpeg");
+  }, "image/avif");
 
   console.log({ blobb });
 }
