@@ -4,6 +4,8 @@ const canvas = document.querySelector<HTMLCanvasElement>("canvas");
 
 const ctx = canvas?.getContext("2d");
 
+const FILE_TARGET = "image/png";
+
 if (form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -16,7 +18,8 @@ if (form) {
   });
 }
 
-input &&
+// Filereader API
+if (input) {
   input.addEventListener("change", (e) => {
     const URL = window.webkitURL || window.URL;
     const url = URL.createObjectURL((e.target as any).files[0]);
@@ -24,29 +27,17 @@ input &&
     img.src = url;
 
     img.onload = function () {
-      const img_width = img.width;
-      const img_height = img.height;
+      const { width, height } = img;
+      console.log({ img });
 
-      var transformedX = 0;
-      var transformedY = 0;
-
-      /* Horizontaal! */
-      if (img_width > img_height) {
-        transformedX = 460;
-        transformedY = (460 * img_height) / img_width;
-      } else if (img_height > img_width) {
-        transformedX = (460 * img_width) / img_height;
-        transformedY = 460;
-      } else {
-        transformedX = 460;
-        transformedY = 460;
-      }
-
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, transformedX, transformedY);
+      if (ctx && canvas) {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height, 0, 0, width, height);
       }
     };
   });
+}
 
 function handleFileUpload() {
   if (!canvas) {
@@ -56,10 +47,10 @@ function handleFileUpload() {
     if (!blob) {
       return;
     }
-    let file = new File([blob], "fileName.jpg", { type: "image/avif" });
+    let file = new File([blob], "fileName.jpg", { type: FILE_TARGET });
     console.log({ file });
     downloadFile(file, "Test");
-  }, "image/avif");
+  }, FILE_TARGET);
 
   console.log({ blobb });
 }
